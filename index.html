@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>ppt-server</title>
+  </head>
+
+  <body>
+    <div id="header">
+      <button id="prevPage">上一页</button>
+      <button id="nextPage">下一页</button>
+    </div>
+    <div id="body"></div>
+    <script>
+      var ws = new WebSocket("ws://127.0.0.1:4000");
+
+      ws.onopen = function() {
+        console.log("open");
+        ws.send(
+          JSON.stringify({
+            name: "start"
+          })
+        );
+
+        document.getElementById("prevPage").onclick = function() {
+          send("prevPage");
+        };
+
+        document.getElementById("nextPage").onclick = () => {
+          send("nextPage");
+        };
+      };
+
+      ws.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        console.log(data);
+      };
+
+      function send(type) {
+        ws.send(
+          JSON.stringify({
+            type,
+            curPage: 1
+          })
+        );
+      }
+    </script>
+  </body>
+</html>
